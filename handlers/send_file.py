@@ -19,18 +19,18 @@ async def media_forward(bot: Client, user_id: int, file_id: int):
                                               message_ids=file_id)
     except FloodWait as e:
         await asyncio.sleep(e.value)
-        return media_forward(bot, user_id, file_id)
+        return await media_forward(bot, user_id, file_id)
 
-async def send_media_and_reply(bot: Client, user_id: int, file_id: int):
-    # Forward media to the user
-    sent_message = await media_forward(bot, user_id, file_id)
+async def send_media_and_reply(bot: Client, user_id: int, file_ids: list):
+    # Forward all media files to the user
+    sent_messages = []
+    for file_id in file_ids:
+        sent_message = await media_forward(bot, user_id, file_id)
+        sent_messages.append(sent_message)
+        # Schedule deletion for each forwarded message
+        asyncio.create_task(delete_after_delay(sent_message, 1800))
     
-    
-    
-    # Schedule deletion after a delay
-    asyncio.create_task(delete_after_delay(sent_message, 1800))
-    
-    # Send a wait message
+    # Send a single wait message after all files are forwarded
     try:
         await bot.send_message(
             chat_id=user_id,
