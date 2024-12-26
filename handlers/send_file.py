@@ -21,7 +21,11 @@ async def media_forward(bot: Client, user_id: int, file_id: int):
         await asyncio.sleep(e.value)
         return await media_forward(bot, user_id, file_id)
 
-async def send_media_and_reply(bot: Client, user_id: int, file_ids: list):
+async def send_media_and_reply(bot: Client, user_id: int, file_ids):
+    # Ensure file_ids is always a list
+    if isinstance(file_ids, int):  # If a single file ID is provided
+        file_ids = [file_ids]
+
     # Forward all media files to the user
     sent_messages = []
     for file_id in file_ids:
