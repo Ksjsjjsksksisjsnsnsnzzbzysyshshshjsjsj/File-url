@@ -32,14 +32,14 @@ async def send_media_and_reply(bot: Client, user_id: int, file_id: int):
     
     # Send a wait message
     try:
-        await sent_message.reply_text(
+        await message.reply_text(
             "Thank you for waiting! Your file is ready and will be deleted in 30 minutes.",
             disable_web_page_preview=True,
             quote=True
         )
     except FloodWait as e:
         await asyncio.sleep(e.x)
-        await sent_message.reply_text(
+        await message.reply_text(
             "Thank you for waiting! Your file is ready and will be deleted in 30 minutes.",
             disable_web_page_preview=True,
             quote=True
