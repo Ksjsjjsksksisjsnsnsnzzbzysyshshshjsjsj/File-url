@@ -30,7 +30,7 @@ async def media_forward(bot: Client, user_id: int, file_id: int):
         await asyncio.sleep(e.value)
         return await media_forward(bot, user_id, file_id)
 
-async def send_media_and_reply(bot: Client, user_id: int, file_ids):
+async def send_media_and_reply(bot: Client, user_id: int, file_id: int):
     """
     Forward all files in file_ids (list or single file_id) to the user.
     Send a single notification message after all media are forwarded.
