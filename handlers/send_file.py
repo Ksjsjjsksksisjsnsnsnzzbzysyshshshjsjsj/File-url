@@ -45,7 +45,7 @@ async def send_media_and_reply(bot: Client, user_id: int, file_ids: list):
     notification_msg = await bot.send_message(
         chat_id=user_id,
         text="<b>‼️Forward the Files to Saved Messages or somewhere else before Downloading it.</b>\n<b>It will get Deleted after 30 minutes.‼️</b>",
-        parse_mode="html"
+        parse_mode=ParseMode.HTML
     )
 
     # Schedule deletion for all messages (including the notification) after 30 minutes
