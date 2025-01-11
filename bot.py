@@ -56,7 +56,6 @@ async def _(bot: Client, cmd: Message):
 
 @Bot.on_message(filters.command("start") & filters.private)
 async def start(bot: Client, cmd: Message):
-
     if cmd.from_user.id in Config.BANNED_USERS:
         await cmd.reply_text("Sorry, You are banned.")
         return
@@ -64,7 +63,7 @@ async def start(bot: Client, cmd: Message):
         back = await handle_force_sub(bot, cmd)
         if back == 400:
             return
-    
+
     usr_cmd = cmd.text.split("_", 1)[-1]
     if usr_cmd == "/start":
         await add_user_to_database(bot, cmd)
@@ -94,21 +93,40 @@ async def start(bot: Client, cmd: Message):
                 file_id = int(b64_to_str(usr_cmd).split("_")[-1])
             except (Error, UnicodeDecodeError):
                 file_id = int(usr_cmd.split("_")[-1])
+
             GetMessage = await bot.get_messages(chat_id=Config.DB_CHANNEL, message_ids=file_id)
             message_ids = []
+
             if GetMessage.text:
                 message_ids = GetMessage.text.split(" ")
                 _response_msg = await cmd.reply_text(
-                    text=f"**Total Files:** `{len(message_ids)}`",
+                    text=f"Total Files: {len(message_ids)}",
                     quote=True,
                     disable_web_page_preview=True
                 )
             else:
                 message_ids.append(int(GetMessage.id))
+
+            snt_msgs = []
             for i in range(len(message_ids)):
-                await send_media_and_reply(bot, user_id=cmd.from_user.id, file_id=int(message_ids[i]))
+                sent_message = await send_media_and_reply(bot, user_id=cmd.from_user.id, file_id=int(message_ids[i]))
+                snt_msgs.append(sent_message)
+
+            # Auto-delete after the specified SECONDS delay
+            if SECONDS != 0:
+                notification_msg = await cmd.reply(f"<b>‼️ Forward the Files to Saved Messages or somewhere else before Downloading it.</b>\n<b>It will get Deleted after 30 minutes .‼️</b>")
+                await asyncio.sleep(1800)
+                
+                # Deleting all sent media and notification
+                for snt_msg in snt_msgs:
+                    try:    
+                        await snt_msg.delete()  
+                    except: 
+                        pass    
+                await notification_msg.delete()  
+
         except Exception as err:
-            await cmd.reply_text(f"Something went wrong!\n\n**Error:** `{err}`")
+            await cmd.reply_text(f"Something went wrong!\n\nError: {err}")
 
 
 @Bot.on_message((filters.document | filters.video | filters.audio | filters.photo) & ~filters.chat(Config.DB_CHANNEL))
