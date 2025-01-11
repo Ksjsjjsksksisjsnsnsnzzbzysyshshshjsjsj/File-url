@@ -32,18 +32,25 @@ async def media_forward(bot: Client, user_id: int, file_id: int):
         await asyncio.sleep(e.value)
         return media_forward(bot, user_id, file_id)
 
+async def send_notification(bot: Client, user_id: int, delay: int = 1800):
+    """
+    Send a single notification message and schedule its deletion.
+    """
+    notification_msg = await bot.send_message(
+        chat_id=user_id,
+        text=(
+            "<b>‼️ Forward the Files to Saved Messages or somewhere else before Downloading it.</b>\n"
+            "<b>It will get Deleted after 30 minutes.‼️</b>"
+        ),
+        parse_mode=ParseMode.HTML
+    )
+
 
 async def send_media_and_reply(bot: Client, user_id: int, file_id: int):
     # Forward the media to the user
     sent_message = await media_forward(bot, user_id, file_id)
-
-    # Send a notification message
-    notification_msg = await bot.send_message(
-        chat_id=user_id,
-        text="<b>‼️Forward the Files to Saved Messages or somewhere else before Downloading it.</b>\n<b>It will get Deleted after 30 minutes.‼️</b>",
-        parse_mode=ParseMode.HTML
-    )
-
+    await send_notification(bot, user_id)
+    
     # Schedule deletion after 30 minutes (1800 seconds)
     asyncio.create_task(delete_after_delay(sent_message, notification_msg, 1800))
 
