@@ -1,15 +1,11 @@
 import asyncio
-import requests
-import string
-import random
 from configs import Config
 from pyrogram import Client
-from pyrogram.enums import ParseMode, ChatAction
 from pyrogram.types import Message
 from pyrogram.errors import FloodWait
 from handlers.helpers import str_to_b64
 
-async def reply_forward(message: Message, file_id: int):
+async def reply_forward(message: Message):
     try:
         await message.reply_text(
             f"Files will be deleted in 30 minutes to avoid copyright issues. Please forward and save them.",
@@ -18,41 +14,35 @@ async def reply_forward(message: Message, file_id: int):
         )
     except FloodWait as e:
         await asyncio.sleep(e.x)
-        await reply_forward(message, file_id)
+        await reply_forward(message)
 
 async def media_forward(bot: Client, user_id: int, file_id: int):
     try:
-        if Config.FORWARD_AS_COPY is True:
-            return await bot.copy_message(chat_id=user_id, from_chat_id=Config.DB_CHANNEL,
-                                          message_id=file_id)
-        elif Config.FORWARD_AS_COPY is False:
-            return await bot.forward_messages(chat_id=user_id, from_chat_id=Config.DB_CHANNEL,
-                                              message_ids=file_id)
+        if Config.FORWARD_AS_COPY:
+            return await bot.copy_message(chat_id=user_id, from_chat_id=Config.DB_CHANNEL, message_id=file_id)
+        else:
+            return await bot.forward_messages(chat_id=user_id, from_chat_id=Config.DB_CHANNEL, message_ids=file_id)
     except FloodWait as e:
         await asyncio.sleep(e.value)
-        return media_forward(bot, user_id, file_id)
+        return await media_forward(bot, user_id, file_id)
 
+async def send_media_and_reply(bot: Client, user_id: int, file_ids: list):
+    """
+    Forward all files in file_ids to the user.
+    Send a reply message only for the last file.
+    """
+    for index, file_id in enumerate(file_ids):
+        # Forward the media
+        sent_message = await media_forward(bot, user_id, file_id)
 
-async def send_media_and_reply(bot: Client, user_id: int, file_id: int):
-    # Forward the media to the user
-    sent_message = await media_forward(bot, user_id, file_id)
+        # Check if it's the last file
+        if index == len(file_ids) - 1:
+            # Send the reply for the last file only
+            await reply_forward(message=sent_message)
 
-    # Send notification message only after the first forward (if it hasn't been sent yet)
-    notification_msg = None
-    if sent_message:
-        notification_msg = await bot.send_message(
-            chat_id=user_id,
-            text="<b>‼️Forward the Files to Saved Messages or somewhere else before Downloading it.</b>\n<b>It will get Deleted after 30 minutes.‼️</b>",
-            parse_mode=ParseMode.HTML
-        )
+        # Schedule deletion of the forwarded message after 30 minutes
+        asyncio.create_task(delete_after_delay(sent_message, 1800))
 
-    # Schedule deletion after 30 minutes (1800 seconds)
-    asyncio.create_task(delete_after_delay(sent_message, notification_msg, 1800))
-
-async def delete_after_delay(sent_message, notification_msg, delay):
-    # Wait for the specified delay
+async def delete_after_delay(message, delay):
     await asyncio.sleep(delay)
-
-    # Delete the sent message and notification
-    await sent_message.delete()
-    await notification_msg.delete()
+    await message.delete()
