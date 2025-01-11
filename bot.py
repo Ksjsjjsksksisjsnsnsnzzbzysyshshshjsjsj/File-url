@@ -39,6 +39,7 @@ from handlers.save_media import (
 )
 
 MediaList = {}
+SECONDS = 1800
 
 Bot = Client(
     name=Config.BOT_USERNAME,
