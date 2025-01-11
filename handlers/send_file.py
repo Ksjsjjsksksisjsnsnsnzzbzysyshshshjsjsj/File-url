@@ -32,7 +32,7 @@ async def media_forward(bot: Client, user_id: int, file_id: int):
         return media_forward(bot, user_id, file_id)
         await message.delete()
 
-async def send_media_and_reply(bot: Client, user_id: int, file_id: int):
+async def send_media_and_reply(bot: Client, user_id: int, file_id: int, message: Message):
     sent_message = await media_forward(bot, user_id, file_id)
  
     notification_msg = await message.reply(f"<b>‼️Forward the Files to Saved Messages or somewhere else before Downloading it.</b>\n<b>It will get Deleted after 30 minutes.‼️</b>")
