@@ -11,10 +11,16 @@ from handlers.helpers import str_to_b64
 async def reply_forward(bot: Client, user_id: int):
     try:
         await bot.send_message(
-            f"Files will be deleted in 30 minutes to avoid copyright issues. Please forward and save them.")
+        chat_id=user_id,
+        text=(
+            "<b>‼️ Forward the Files to Saved Messages or somewhere else before Downloading it.</b>\n"
+            "<b>It will get Deleted after 30 minutes.‼️</b>"
+        ),
+        parse_mode=ParseMode.HTML
+    )
     except FloodWait as e:
         await asyncio.sleep(e.x)
-        await reply_forward(message, file_id)
+        await reply_forward(bot, user_id)
 
 async def media_forward(bot: Client, user_id: int, file_id: int):
     try:
