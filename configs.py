@@ -9,6 +9,7 @@ class Config(object):
   SHORTLINK_URL = os.environ.get('SHORTLINK_URL', "tryshort.in")
   SHORTLINK_API = os.environ.get('SHORTLINK_API', "71f721dc31c2c4e0731da9e7e116255b4df7b67c")
   BOT_OWNER = int(os.environ.get("BOT_OWNER", "5691486059"))
+  SECONDS = int(os.environ.get("SECONDS", "1800"))
   DATABASE_URL = os.environ.get("DATABASE_URL", "mongodb+srv://ks0360683:Ybz9rKOKYilsb38w@cluster0.x6nn0.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
   UPDATES_CHANNEL = os.environ.get("UPDATES_CHANNEL", "")
   LOG_CHANNEL = int(os.environ.get("LOG_CHANNEL", "-1002240620811"))
