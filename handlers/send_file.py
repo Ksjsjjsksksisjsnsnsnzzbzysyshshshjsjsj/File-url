@@ -38,7 +38,7 @@ async def send_media_and_reply(bot: Client, user_id: int, file_ids: list):
     # Forward all files one by one
     sent_messages = []
     for file_id in file_ids:
-        sent_message = await media_forward(bot, user_id, file_id)
+        sent_message = await media_forward(bot, user_id, file_ids)
         sent_messages.append(sent_message)
 
     # Send a single notification after all media are forwarded
