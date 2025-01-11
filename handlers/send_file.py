@@ -11,10 +11,7 @@ from handlers.helpers import str_to_b64
 async def reply_forward(bot: Client, user_id: int):
     try:
         await bot.send_message(
-            f"Files will be deleted in 30 minutes to avoid copyright issues. Please forward and save them.",
-            disable_web_page_preview=True,
-            quote=True
-        )
+            f"Files will be deleted in 30 minutes to avoid copyright issues. Please forward and save them.")
     except FloodWait as e:
         await asyncio.sleep(e.x)
         await reply_forward(message, file_id)
