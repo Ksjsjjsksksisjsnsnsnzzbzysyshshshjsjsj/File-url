@@ -40,11 +40,11 @@ async def send_media_and_reply(bot: Client, user_id: int, file_id: int):
     asyncio.create_task(delete_after_delay(sent_message, 1800))
 
 
-async def delete_after_delay(sent_message, notification_msg, delay):
+async def delete_after_delay(sent_message, notification_msg, 1800):
     # Send a notification message and capture the message object
     notification_msg = await send_notification(bot, user_id)
     # Wait for the specified delay
-    await asyncio.sleep(delay)
+    await asyncio.sleep(1800)
 
     # Delete the sent message and notification
     await sent_message.delete()
