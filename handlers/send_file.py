@@ -3,6 +3,7 @@ import requests
 import string
 import random
 from configs import Config
+from pyrogram.enums import ParseMode
 from pyrogram import Client
 from pyrogram.types import Message
 from pyrogram.errors import FloodWait
