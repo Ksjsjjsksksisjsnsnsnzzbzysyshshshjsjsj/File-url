@@ -30,15 +30,19 @@ async def media_forward(bot: Client, user_id: int, file_id: int):
         await asyncio.sleep(e.value)
         return await media_forward(bot, user_id, file_id)
 
-async def send_media_and_reply(bot: Client, user_id: int, file_ids: list):
+async def send_media_and_reply(bot: Client, user_id: int, file_ids):
     """
-    Forward all files in file_ids to the user.
+    Forward all files in file_ids (list or single file_id) to the user.
     Send a single notification message after all media are forwarded.
     """
+    # Ensure file_ids is a list
+    if not isinstance(file_ids, list):
+        file_ids = [file_ids]
+
     # Forward all files one by one
     sent_messages = []
     for file_id in file_ids:
-        sent_message = await media_forward(bot, user_id, file_ids)
+        sent_message = await media_forward(bot, user_id, file_id)
         sent_messages.append(sent_message)
 
     # Send a single notification after all media are forwarded
@@ -52,7 +56,3 @@ async def send_media_and_reply(bot: Client, user_id: int, file_ids: list):
     for message in sent_messages:
         asyncio.create_task(delete_after_delay(message, 1800))
     asyncio.create_task(delete_after_delay(notification_msg, 1800))
-
-async def delete_after_delay(message, delay):
-    await asyncio.sleep(delay)
-    await message.delete()
