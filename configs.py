@@ -1,5 +1,6 @@
 import os
 
+CRAZY_PARMANANT_URL = os.environ.get("CRAZY_PARMANANT_URL", "https://qt-movie.blogspot.com/2024/11/qt-movie-bot.html")
 class Config(object):
   API_ID = int(os.environ.get("API_ID", "29534418"))
   API_HASH = os.environ.get("API_HASH", "5f15dd792990ade40a43ae17413b422f")
