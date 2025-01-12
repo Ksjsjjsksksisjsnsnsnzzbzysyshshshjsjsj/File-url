@@ -74,7 +74,7 @@ async def start(bot: Client, cmd: Message):
             reply_markup=InlineKeyboardMarkup(
                 [
                     [
-                        InlineKeyboardButton("Updates Channel", url="https://t.me/qt_movie")
+                        InlineKeyboardButton("Updates Channel", url="https://t.me/")
                     ],
                     [
                         InlineKeyboardButton("", callback_data="aboutbot"),
