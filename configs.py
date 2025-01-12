@@ -34,12 +34,12 @@ Send Me any Media or File. I can Work In Channel too. Add Me to Channel with Edi
 ╰──────[ 😎 ]───────────⍟
 """
   ABOUT_DEV_TEXT = f"""
-🧑🏻‍💻 𝗗𝗲𝘃𝗲𝗹𝗼𝗽𝗲𝗿: [qt](https://telegram.me/)
+🧑🏻‍💻 𝗗𝗲𝘃𝗲𝗹𝗼𝗽𝗲𝗿: [lt](https://telegram.me/)
  
  I am Super noob Please Support My Hard Work.
 
 [Donate Me](https://t.me/)
 """
   HOME_TEXT = """
-Hello,This is a Permanent FileStore Bot for @qt_movie.
+Hello,This is a Permanent FileStore Bot .
 """
